@@ -11,7 +11,7 @@ $PackagePointPrintKey = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\P
 $PointPrintSrvList = $PrtSrvName -join ";"
 If (Test-Path -Path $PointPrintkey)
 {
-    New-ItemProperty $RegKey -Name "Restricted" -Value "1" -PropertyType DWORD -Force -Verbose
+    New-ItemProperty $PointPrintkey  -Name "Restricted" -Value "1" -PropertyType DWORD -Force -Verbose
     New-ItemProperty $PointPrintkey -Name "TrustedServers" -Value "1" -PropertyType DWORD -Force -Verbose
     New-ItemProperty $PointPrintkey -Name "ServerList" -Value $PointPrintSrvList -PropertyType STRING  -Force -Verbose
     New-ItemProperty $PointPrintkey -Name "InForest" -Value "0" -PropertyType DWORD -Force -Verbose
