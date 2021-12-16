@@ -1,8 +1,8 @@
 ﻿Param(
     [Parameter(Mandatory = $true)]
-    [string]$PrtSrvName
+    [string]$PrtSrvName # Multiple print servers separated by ;
 )
-$PrtSrvName = "" # Multiple print servers separated by ;
+# $PrtSrvName = "" # Multiple print servers separated by ;
 
 # Modify current Point and Print and Package Point and Print restrictions
 $PointPrintkey = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint"
