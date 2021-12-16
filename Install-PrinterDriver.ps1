@@ -1,8 +1,7 @@
 ﻿Param(
     [Parameter(Mandatory = $true)]
-    [string]$PrtSrvName # Multiple print servers separated by ;
+    [array]$PrtSrvName # Multiple print servers separated by , "srvprn01.domain.local","srvprn02.domain.local"
 )
-# $PrtSrvName = "" # Multiple print servers separated by ;
 
 # Modify current Point and Print and Package Point and Print restrictions
 $PointPrintkey = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint"
@@ -52,7 +51,7 @@ If (Test-Path -Path $PointPrintkey)
 
 ForEach ($PrtSrv in $PrtSrvName)
 {
-    $Drivers = (Get-Printer -ComputerName $PrtSrv | Where-Object {$_.DriverName -ne "Microsoft XPS Document Writer" -and $_.PortName -ne "LPT1:" -or $_.PortName -ne "PORTPROMPT:" -or $_.PortName -ne "FILE:"}).DriverName | Sort-Object -Unique
+    $Drivers = (Get-Printer -ComputerName $PrtSrv | Where-Object {$_.PortName -ne "PORTPROMPT:"}).DriverName | Sort-Object -Unique
     
     ForEach ($Driver in $Drivers)
     {
