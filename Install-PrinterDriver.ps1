@@ -1,6 +1,42 @@
-﻿Param(
+﻿#Requires -RunAsAdministrator
+<#
+
+.NAME
+    Install-PrinterDriver
+
+.SYNOPSIS
+    Install printer drivers from a print server.
+
+.DESCRIPTION
+    Install printer drivers from one or more print servers in the network.
+
+    This script is meant to be used on a golden image or on a computer where the end user will not be able to install printer drivers.
+    The script goes through the specified print server and installs all available drivers on the golden image.
+
+    As a prerequisite this script configures the Point and Print restrictions and the Package Point and Print restrictions via registry values.
+
+.PARAMETER PrtSrvName
+    The name of the print server containing the drivers needed.
+    Multiple print server names should be separated by a comma.
+
+.EXAMPLES
+   Install the drivers from a single print server 
+            Install-PrinterDriver -PrtSrvName srvprn01.domain.local
+    
+    Install the drivers from two print servers
+            Install-PrinterDriver -PrtSrvName "srvprn01.domain.local","srvprn02.domain.local"
+
+.NOTES
+
+    Author:             Kasper Johansen
+    Website:            https://virtualwarlock.net
+    Last modified Date: 12-06-2022
+
+#>
+
+Param(
     [Parameter(Mandatory = $true)]
-    [array]$PrtSrvName # Multiple print servers separated by , "srvprn01.domain.local","srvprn02.domain.local"
+    [array]$PrtSrvName
 )
 
 # Modify current Point and Print and Package Point and Print restrictions
@@ -10,7 +46,7 @@ $PackagePointPrintKey = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\P
 $PointPrintSrvList = $PrtSrvName -join ";"
 If (Test-Path -Path $PointPrintkey)
 {
-    New-ItemProperty $PointPrintkey  -Name "Restricted" -Value "1" -PropertyType DWORD -Force -Verbose
+    New-ItemProperty $PointPrintkey -Name "Restricted" -Value "1" -PropertyType DWORD -Force -Verbose
     New-ItemProperty $PointPrintkey -Name "TrustedServers" -Value "1" -PropertyType DWORD -Force -Verbose
     New-ItemProperty $PointPrintkey -Name "ServerList" -Value $PointPrintSrvList -PropertyType STRING  -Force -Verbose
     New-ItemProperty $PointPrintkey -Name "InForest" -Value "0" -PropertyType DWORD -Force -Verbose
